@@ -18,6 +18,7 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 from django.http import JsonResponse
+from rest_framework_simplejwt.views import TokenRefreshView
 
 
 def health_check(request):
@@ -41,4 +42,6 @@ urlpatterns = [
     path("api/recommendations/", include("apps.recommendations.urls")),
     path("api/resumes/", include("apps.resumes.urls")),
     path("api/scheduler/", include("apps.scheduler.urls")),
+
+    path("refresh/",TokenRefreshView.as_view(),name="token-refresh",)
 ]
