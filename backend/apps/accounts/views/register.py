@@ -2,11 +2,14 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
 
-from apps.accounts.serializers import RegisterSerializer
+from apps.accounts.serializers.register import RegisterSerializer
 from apps.accounts.services.auth_service import AuthService
+from rest_framework.permissions import AllowAny
 
 
 class RegisterAPIView(APIView):
+
+    permission_classes = [AllowAny]
 
     def post(self, request):
 

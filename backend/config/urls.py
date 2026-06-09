@@ -21,16 +21,16 @@ from django.http import JsonResponse
 from rest_framework_simplejwt.views import TokenRefreshView
 
 
-def health_check(request):
-    """Health check endpoint"""
-    return JsonResponse({
-        'status': 'healthy',
-        'message': 'E-commerce Customer Behavior Analytics API is running'
-    })
+# def health_check(request):
+#     """Health check endpoint"""
+#     return JsonResponse({
+#         'status': 'healthy',
+#         'message': 'E-commerce Customer Behavior Analytics API is running'
+#     })
 
 
 urlpatterns = [
-    path("", health_check, name="health-check"),
+    # path("", health_check, name="health-check"),
     path("admin/", admin.site.urls),
     path("api/accounts/", include("apps.accounts.urls")),
     path("api/analytics/", include("apps.analytics.urls")),
