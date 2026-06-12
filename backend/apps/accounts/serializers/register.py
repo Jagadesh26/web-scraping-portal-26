@@ -1,5 +1,8 @@
 import re
 
+from django.contrib.auth.password_validation import validate_password
+from django.core.exceptions import ValidationError as DjangoValidationError
+
 from rest_framework import serializers
 
 from apps.accounts.models import User
@@ -28,6 +31,11 @@ class RegisterSerializer(serializers.Serializer):
         return value
 
     def validate_password(self, value):
+
+        try:
+            validate_password(value)
+        except DjangoValidationError as exc:
+            raise serializers.ValidationError(list(exc.messages))
 
         if len(value) < 8:
             raise serializers.ValidationError(

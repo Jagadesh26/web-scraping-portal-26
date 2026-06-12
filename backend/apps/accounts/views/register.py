@@ -1,6 +1,7 @@
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
+from drf_spectacular.utils import OpenApiResponse, extend_schema
 
 from apps.accounts.serializers.register import RegisterSerializer
 from apps.accounts.services.auth_service import AuthService
@@ -11,6 +12,11 @@ class RegisterAPIView(APIView):
 
     permission_classes = [AllowAny]
 
+    @extend_schema(
+        request=RegisterSerializer,
+        responses={201: OpenApiResponse(description="Registration successful")},
+        tags=["Accounts"],
+    )
     def post(self, request):
 
         serializer = RegisterSerializer(

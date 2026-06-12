@@ -10,14 +10,13 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/6.0/ref/settings/
 """
 
-from pathlib import Path
 import os
+from pathlib import Path
+
 import dj_database_url
-
-# Build paths inside the project like this: BASE_DIR / 'subdir'.
-BASE_DIR = Path(__file__).resolve().parent.parent
-
 import environ
+
+BASE_DIR = Path(__file__).resolve().parent.parent
 
 env = environ.Env()
 
@@ -29,12 +28,15 @@ environ.Env.read_env(env_path)
 # See https://docs.djangoproject.com/en/6.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = "django-insecure-aeh0*r3apmgsa@@5@b$%ki6h(uas+d)(59yu2aym95(+3fp^p)"
+SECRET_KEY = env(
+    "SECRET_KEY",
+    default="django-insecure-aeh0*r3apmgsa@@5@b$%ki6h(uas+d)(59yu2aym95(+3fp^p)",
+)
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = env.bool("DEBUG", default=True)
 
-ALLOWED_HOSTS = ['*']
+ALLOWED_HOSTS = env.list("ALLOWED_HOSTS", default=["*"])
 
 AUTH_USER_MODEL = "accounts.User"
 
@@ -49,6 +51,8 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     "rest_framework",
+    "rest_framework_simplejwt.token_blacklist",
+    "drf_spectacular",
     "corsheaders",
     "apps.accounts.apps.AccountsConfig",
     "apps.analytics.apps.AnalyticsConfig",
@@ -96,13 +100,26 @@ WSGI_APPLICATION = "config.wsgi.application"
 # Database
 # https://docs.djangoproject.com/en/6.0/ref/settings/#databases
 
+DATABASE_URL = env("DATABASE_URL", default=f"sqlite:///{BASE_DIR / 'db.sqlite3'}")
+DATABASE_SSL_REQUIRE = env.bool(
+    "DATABASE_SSL_REQUIRE",
+    default=DATABASE_URL.startswith(("postgres://", "postgresql://")),
+)
+
 DATABASES = {
-    'default': dj_database_url.config(
-        default=f"sqlite:///{BASE_DIR / 'db.sqlite3'}",
-        conn_max_age=600,
-        ssl_require=True
+    "default": dj_database_url.parse(
+        DATABASE_URL,
+        conn_max_age=env.int("DATABASE_CONN_MAX_AGE", default=600),
+        conn_health_checks=True,
+        ssl_require=DATABASE_SSL_REQUIRE,
     )
 }
+
+if DATABASES["default"]["ENGINE"] == "django.db.backends.postgresql":
+    DATABASES["default"]["DISABLE_SERVER_SIDE_CURSORS"] = env.bool(
+        "DATABASE_DISABLE_SERVER_SIDE_CURSORS",
+        default=True,
+    )
 
 
 # Password validation
@@ -141,7 +158,7 @@ SIMPLE_JWT = {
     "ACCESS_TOKEN_LIFETIME": timedelta(hours=7),
     "REFRESH_TOKEN_LIFETIME": timedelta(days=14),
     "ROTATE_REFRESH_TOKENS": False,
-    "BLACKLIST_AFTER_ROTATION": False,
+    "BLACKLIST_AFTER_ROTATION": True,
 }
 
 
@@ -161,6 +178,7 @@ REST_FRAMEWORK = {
         "rest_framework_simplejwt.authentication.JWTAuthentication",
         "rest_framework.authentication.SessionAuthentication",
     ),
+    "DEFAULT_SCHEMA_CLASS": "drf_spectacular.openapi.AutoSchema",
     "DEFAULT_PERMISSION_CLASSES": (
         "rest_framework.permissions.IsAuthenticatedOrReadOnly",
     ),
@@ -171,6 +189,20 @@ REST_FRAMEWORK = {
         "rest_framework.filters.OrderingFilter",
     ),
 }
+
+SPECTACULAR_SETTINGS = {
+    "TITLE": "Web Scraping Portal API",
+    "DESCRIPTION": "Backend API documentation for authentication and portal modules.",
+    "VERSION": "1.0.0",
+    "SERVE_INCLUDE_SCHEMA": False,
+}
+
+FRONTEND_URL = env("FRONTEND_URL", default="http://localhost:3000")
+DEFAULT_FROM_EMAIL = env("DEFAULT_FROM_EMAIL", default="noreply@example.com")
+EMAIL_BACKEND = env(
+    "EMAIL_BACKEND",
+    default="django.core.mail.backends.console.EmailBackend",
+)
 
 # CORS Configuration
 CORS_ALLOWED_ORIGINS = [
