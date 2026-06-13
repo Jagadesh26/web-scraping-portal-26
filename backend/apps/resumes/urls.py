@@ -1,7 +1,24 @@
 from django.urls import path
 
-app_name = "resumes"
+from .views import *
 
 urlpatterns = [
-    # Add your resumes-related URLs here
+
+    path(
+        "upload/",
+        ResumeUploadAPIView.as_view(),
+        name="resume-upload"
+    ),
+
+    path(
+        "resume-view/",
+        ResumeAPIView.as_view(),
+        name="resume-detail"
+    ),
+
+    path(
+        "delete/",
+        ResumeDeleteAPIView.as_view(),
+        name="resume-delete"
+    ),
 ]

@@ -16,12 +16,14 @@ from pathlib import Path
 import dj_database_url
 import environ
 
-BASE_DIR = Path(__file__).resolve().parent.parent
+BASE_DIR = Path(__file__).resolve().parent.parent.parent
 
 env = environ.Env()
 
 # Take environment variables from .env file
-env_path = os.path.join(BASE_DIR.parent.parent, '.env')
+env_path = BASE_DIR / ".env"
+if not env_path.exists():
+    env_path = BASE_DIR.parent / ".env"
 environ.Env.read_env(env_path)
 
 # Quick-start development settings - unsuitable for production
@@ -96,6 +98,50 @@ TEMPLATES = [
 
 WSGI_APPLICATION = "config.wsgi.application"
 
+EMAIL_HOST = env("EMAIL_HOST", default="")
+EMAIL_PORT = env.int("EMAIL_PORT", default=587)
+EMAIL_USE_TLS = env.bool("EMAIL_USE_TLS", default=True)
+
+EMAIL_HOST_USER = env(
+    "EMAIL_HOST_USER",
+    default=""
+)
+
+EMAIL_HOST_PASSWORD = env(
+    "EMAIL_HOST_PASSWORD",
+    default=""
+)
+
+
+
+CLOUDINARY_CLOUD_NAME = env(
+    "CLOUDINARY_CLOUD_NAME",
+    default=""
+)
+
+CLOUDINARY_API_KEY = env(
+    "CLOUDINARY_API_KEY",
+    default=""
+)
+
+CLOUDINARY_API_SECRET = env(
+    "CLOUDINARY_API_SECRET",
+    default=""
+)
+
+
+MAX_RESUME_SIZE_MB = env.int(
+    "MAX_RESUME_SIZE_MB",
+    default=5
+)
+
+ALLOWED_RESUME_EXTENSIONS = [
+    "pdf",
+    "docx",
+]
+
+FILE_UPLOAD_MAX_MEMORY_SIZE = 5 * 1024 * 1024
+
 
 # Database
 # https://docs.djangoproject.com/en/6.0/ref/settings/#databases
@@ -146,7 +192,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = "en-us"
 
-TIME_ZONE = "UTC"
+TIME_ZONE = "Asia/Kolkata"
 
 USE_I18N = True
 
@@ -155,8 +201,8 @@ USE_TZ = True
 from datetime import timedelta
 
 SIMPLE_JWT = {
-    "ACCESS_TOKEN_LIFETIME": timedelta(hours=7),
-    "REFRESH_TOKEN_LIFETIME": timedelta(days=14),
+    "ACCESS_TOKEN_LIFETIME": timedelta(hours=1),
+    "REFRESH_TOKEN_LIFETIME": timedelta(days=7),
     "ROTATE_REFRESH_TOKENS": False,
     "BLACKLIST_AFTER_ROTATION": True,
 }
