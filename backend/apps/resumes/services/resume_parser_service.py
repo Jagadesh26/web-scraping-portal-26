@@ -1,30 +1,33 @@
+import logging
+
 from django.db import transaction
 
 from apps.resumes.models import (
     Resume,
-    ResumeAnalysis
+    ResumeAnalysis,
+    ResumeEducation,
+    ResumeExperience,
+    ResumeProject,
+    ResumeSkill,
 )
 
-from apps.resumes.parsers.parser_factory import (
-    ParserFactory
+from apps.resumes.parsers.parser_factory import ParserFactory
+from apps.resumes.services.education_extractor_service import (
+    EducationExtractorService
 )
-
-
 from apps.resumes.services.section_detector_service import (
     SectionDetectorService
-)
-
-from apps.resumes.services.skill_extractor_service import (
-    SkillExtractorService
 )
 
 from apps.resumes.services.experience_extractor_service import (
     ExperienceExtractorService
 )
-
-
-
-import logging
+from apps.resumes.services.project_extractor_service import (
+    ProjectExtractorService
+)
+from apps.resumes.services.skill_extractor_service import (
+    SkillExtractorService
+)
 
 logger = logging.getLogger(__name__)
 
@@ -32,7 +35,6 @@ logger = logging.getLogger(__name__)
 class ResumeParserService:
 
     @staticmethod
-    @transaction.atomic
     def parse_resume(
         resume: Resume,
         file_path: str
@@ -57,64 +59,69 @@ class ResumeParserService:
                 )
             )
 
-            analysis, created = (
-                ResumeAnalysis.objects.get_or_create(
-                    resume=resume
-                )
-            )
-
-            analysis.raw_text = raw_text
-
-            analysis.save()
-
-            resume.status = "COMPLETED"
-
-            resume.save(
-                update_fields=["status"]
-            )
-
-            from apps.resumes.services.skill_extractor_service import (
-                SkillExtractorService
-            )
-
             sections = (
                 SectionDetectorService.detect_sections(
                     raw_text
                 )
             )
 
-            SkillExtractorService.extract_skills(
-                resume=resume,
-                raw_text=sections["skills"]
-            )
+            with transaction.atomic():
 
-            ExperienceExtractorService.extract_experience(
-                resume=resume,
-                raw_text=sections["experience"]
-            )
+                analysis, _ = (
+                    ResumeAnalysis.objects.get_or_create(
+                        resume=resume
+                    )
+                )
 
-            EducationExtractorService.extract_education(
-                resume=resume,
-                raw_text=sections["education"]
-            )
+                analysis.raw_text = raw_text
 
-            ProjectExtractorService.extract_projects(
-                resume=resume,
-                raw_text=sections["projects"]
-            )
+                analysis.save()
 
-            from apps.resumes.services.experience_extractor_service import (
-                ExperienceExtractorService
-            )
+                ResumeSkill.objects.filter(
+                    resume=resume
+                ).delete()
 
-            ExperienceExtractorService.extract_experience(
-                resume=resume,
-                raw_text=raw_text
-            )
+                ResumeExperience.objects.filter(
+                    resume=resume
+                ).delete()
+
+                ResumeEducation.objects.filter(
+                    resume=resume
+                ).delete()
+
+                ResumeProject.objects.filter(
+                    resume=resume
+                ).delete()
+
+                SkillExtractorService.extract_skills(
+                    resume=resume,
+                    raw_text=sections.get("skills") or raw_text
+                )
+
+                ExperienceExtractorService.extract_experience(
+                    resume=resume,
+                    raw_text=sections.get("experience") or raw_text
+                )
+
+                EducationExtractorService.extract_education(
+                    resume=resume,
+                    raw_text=sections.get("education") or raw_text
+                )
+
+                ProjectExtractorService.extract_projects(
+                    resume=resume,
+                    raw_text=sections.get("projects") or raw_text
+                )
+
+                resume.status = "COMPLETED"
+
+                resume.save(
+                    update_fields=["status"]
+                )
 
             return analysis
 
-        except Exception as exc:
+        except Exception:
 
             logger.exception(
                 f"Resume parsing failed: {resume.id}"

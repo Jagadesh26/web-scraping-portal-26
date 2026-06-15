@@ -8,7 +8,14 @@ class ResumeUploadSerializer(serializers.Serializer):
 
     def validate_resume(self, file):
 
-        extension = file.name.split(".")[-1].lower()
+        file_name = file.name or ""
+
+        if "." not in file_name:
+            raise serializers.ValidationError(
+                "Only PDF and DOCX files are allowed."
+            )
+
+        extension = file_name.rsplit(".", 1)[-1].lower()
 
         allowed_extensions = (
             settings.ALLOWED_RESUME_EXTENSIONS
@@ -27,7 +34,7 @@ class ResumeUploadSerializer(serializers.Serializer):
 
         if file.size > max_size:
             raise serializers.ValidationError(
-                "File size exceeds 5 MB."
+                f"File size exceeds {settings.MAX_RESUME_SIZE_MB} MB."
             )
 
         return file

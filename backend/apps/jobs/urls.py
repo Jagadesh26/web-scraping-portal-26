@@ -1,7 +1,18 @@
 from django.urls import path
 
-app_name = "jobs"
+from .views import JobDetailAPIView, JobListAPIView
 
 urlpatterns = [
-    # Add your jobs-related URLs here
+
+    path(
+        "job-list/",
+        JobListAPIView.as_view(),
+        name="job-list",
+    ),
+
+    path(
+        "job-detail/<uuid:id>/",
+        JobDetailAPIView.as_view(),
+        name="job-detail",
+    ),
 ]

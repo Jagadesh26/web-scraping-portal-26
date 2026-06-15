@@ -5,13 +5,30 @@ from rest_framework.permissions import (
     IsAuthenticated
 )
 
-from apps.resumes.serializers.resume import ResumeSerializer
+from apps.resumes.serializers.resume import (
+    ResumeAnalysisSerializer,
+    ResumeEducationSerializer,
+    ResumeExperienceSerializer,
+    ResumeProjectSerializer,
+    ResumeSerializer,
+    ResumeSkillSerializer,
+)
 from apps.resumes.serializers.resume_upload import (
     ResumeUploadSerializer
 )
 
 from apps.resumes.services.resume_service import (
     ResumeService
+)
+
+
+from apps.resumes.models import (
+    Resume,
+    ResumeAnalysis,
+    ResumeSkill,
+    ResumeExperience,
+    ResumeEducation,
+    ResumeProject,
 )
 
 
@@ -132,3 +149,233 @@ class ResumeDeleteAPIView(APIView):
             },
             status=status.HTTP_200_OK
         )
+    
+
+
+
+class ResumeAnalysisAPIView(APIView):
+
+    permission_classes = [
+        IsAuthenticated
+    ]
+
+    def get(self, request):
+
+        resume = Resume.objects.filter(
+            user=request.user
+        ).first()
+
+        if not resume:
+
+            return Response(
+                {
+                    "success": False,
+                    "message": "Resume not found."
+                },
+                status=status.HTTP_404_NOT_FOUND
+            )
+
+        analysis = ResumeAnalysis.objects.filter(
+            resume=resume
+        ).first()
+
+        if not analysis:
+
+            return Response(
+                {
+                    "success": False,
+                    "message": "Resume analysis not found."
+                },
+                status=status.HTTP_404_NOT_FOUND
+            )
+
+        serializer = (
+            ResumeAnalysisSerializer(
+                analysis
+            )
+        )
+
+        return Response(
+            {
+                "success": True,
+                "data": serializer.data
+            }
+        )
+    
+
+
+
+class ResumeSkillAPIView(APIView):
+
+    permission_classes = [
+        IsAuthenticated
+    ]
+
+    def get(self, request):
+
+        resume = Resume.objects.filter(
+            user=request.user
+        ).first()
+
+        if not resume:
+
+            return Response(
+                {
+                    "success": False,
+                    "message": "Resume not found."
+                },
+                status=status.HTTP_404_NOT_FOUND
+            )
+
+        skills = ResumeSkill.objects.filter(
+            resume=resume
+        )
+
+        serializer = (
+            ResumeSkillSerializer(
+                skills,
+                many=True
+            )
+        )
+
+        return Response(
+            {
+                "success": True,
+                "data": serializer.data
+            }
+        )
+    
+
+
+class ResumeExperienceAPIView(APIView):
+
+    permission_classes = [
+        IsAuthenticated
+    ]
+
+    def get(self, request):
+
+        resume = Resume.objects.filter(
+            user=request.user
+        ).first()
+
+        if not resume:
+
+            return Response(
+                {
+                    "success": False,
+                    "message": "Resume not found."
+                },
+                status=status.HTTP_404_NOT_FOUND
+            )
+
+        experiences = (
+            ResumeExperience.objects.filter(
+                resume=resume
+            )
+        )
+
+        serializer = (
+            ResumeExperienceSerializer(
+                experiences,
+                many=True
+            )
+        )
+
+        return Response(
+            {
+                "success": True,
+                "data": serializer.data
+            }
+        )
+
+
+
+class ResumeEducationAPIView(APIView):
+
+    permission_classes = [
+        IsAuthenticated
+    ]
+
+    def get(self, request):
+
+        resume = Resume.objects.filter(
+            user=request.user
+        ).first()
+
+        if not resume:
+
+            return Response(
+                {
+                    "success": False,
+                    "message": "Resume not found."
+                },
+                status=status.HTTP_404_NOT_FOUND
+            )
+
+        educations = (
+            ResumeEducation.objects.filter(
+                resume=resume
+            )
+        )
+
+        serializer = (
+            ResumeEducationSerializer(
+                educations,
+                many=True
+            )
+        )
+
+        return Response(
+            {
+                "success": True,
+                "data": serializer.data
+            }
+        )
+    
+
+
+class ResumeProjectAPIView(APIView):
+
+    permission_classes = [
+        IsAuthenticated
+    ]
+
+    def get(self, request):
+
+        resume = Resume.objects.filter(
+            user=request.user
+        ).first()
+
+        if not resume:
+
+            return Response(
+                {
+                    "success": False,
+                    "message": "Resume not found."
+                },
+                status=status.HTTP_404_NOT_FOUND
+            )
+
+        projects = (
+            ResumeProject.objects.filter(
+                resume=resume
+            )
+        )
+
+        serializer = (
+            ResumeProjectSerializer(
+                projects,
+                many=True
+            )
+        )
+
+        return Response(
+            {
+                "success": True,
+                "data": serializer.data
+            }
+        )
+    
+
+

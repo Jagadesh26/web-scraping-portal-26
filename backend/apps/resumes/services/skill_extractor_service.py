@@ -12,6 +12,9 @@ class SkillExtractorService:
         raw_text
     ):
 
+        if not raw_text:
+            return []
+
         extracted_skills = []
 
         text = raw_text.lower()

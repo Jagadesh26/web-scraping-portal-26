@@ -13,6 +13,9 @@ class ExperienceExtractorService:
         raw_text
     ):
 
+        if not raw_text:
+            return []
+
         experiences = []
 
         pattern = (
