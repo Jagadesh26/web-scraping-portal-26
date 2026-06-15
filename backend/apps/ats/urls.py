@@ -1,7 +1,24 @@
 from django.urls import path
 
-app_name = "ats"
+from .views import RecommendationAPIView, SkillGapAPIView
 
 urlpatterns = [
-    # Add your ATS-related URLs here
+
+    path(
+        "recommendations/",
+        RecommendationAPIView.as_view(),
+        name="recommendations",
+    ),
+
+    path(
+        "recommendation-detail/<uuid:id>/",
+        RecommendationAPIView.as_view(),
+        name="recommendation-detail",
+    ),
+
+    path(
+        "skill-gap/",
+        SkillGapAPIView.as_view(),
+        name="skill-gap",
+    ),
 ]

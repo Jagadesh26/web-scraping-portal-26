@@ -4,6 +4,8 @@ from django.db import models
 
 from django.conf import settings
 
+from apps.profiles.models.profile import Profile
+
 
 
 class JobRole(models.Model):
@@ -69,3 +71,37 @@ class UserJobPreference(models.Model):
         )
 
 
+
+
+
+
+class PreferredLocation(models.Model):
+
+    id = models.UUIDField(
+        primary_key=True,
+        default=uuid.uuid4,
+        editable=False
+    )
+
+    profile = models.ForeignKey(
+        Profile,
+        on_delete=models.CASCADE,
+        related_name="preferred_locations"
+    )
+
+    location = models.CharField(
+        max_length=255
+    )
+
+    created_at = models.DateTimeField(
+        auto_now_add=True
+    )
+
+    class Meta:
+
+        db_table = "preferred_locations"
+
+        unique_together = (
+            "profile",
+            "location",
+        )
