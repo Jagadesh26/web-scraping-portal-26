@@ -1,6 +1,7 @@
-from apps.profiles.models import (
-    JobPreference
-)
+
+
+
+from apps.profiles.models.job_preference import UserJobPreference
 
 
 class PreferenceMatchingService:
@@ -12,8 +13,8 @@ class PreferenceMatchingService:
     ):
 
         preferences = (
-            JobPreference.objects.filter(
-                profile__user=user
+            UserJobPreference.objects.filter(
+                user=user
             )
         )
 

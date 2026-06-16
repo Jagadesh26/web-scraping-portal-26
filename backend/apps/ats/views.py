@@ -5,6 +5,7 @@ from rest_framework.permissions import (
 )
 
 from apps.ats.serializers import JobMatchDetailSerializer, JobMatchSerializer
+from apps.ats.services.dashboard_service import ATSDashboardService
 from apps.ats.services.recommendation_service import (
     RecommendationService
 )
@@ -120,6 +121,36 @@ class SkillGapAPIView(
 
         data = (
             SkillGapService.analyze(
+                request.user
+            )
+        )
+
+        return Response(
+            {
+                "success": True,
+                "data": data
+            }
+        )
+    
+
+
+
+class ATSDashboardAPIView(
+    APIView
+):
+
+    permission_classes = [
+        IsAuthenticated
+    ]
+
+    def get(
+        self,
+        request
+    ):
+
+        data = (
+            ATSDashboardService
+            .get_dashboard(
                 request.user
             )
         )

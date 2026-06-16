@@ -7,7 +7,8 @@ from apps.resumes.models import (
     ResumeSkill
 )
 
-from apps.ats.models import (
+from apps.jobs.models import (
+    Job,
     JobMatch
 )
 

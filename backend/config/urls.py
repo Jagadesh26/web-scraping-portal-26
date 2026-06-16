@@ -39,6 +39,8 @@ urlpatterns = [
     path("api/notifications/", include("apps.notifications.urls")),
     path("api/profiles/", include("apps.profiles.urls")),
     path("api/recommendations/", include("apps.recommendations.urls")),
+    path("api/resume-checker/", include("apps.resume_checker.urls")),
+    path("api/v1/resume-checker/", include("apps.resume_checker.urls")),
     path("api/resumes/", include("apps.resumes.urls")),
     path("api/scheduler/", include("apps.scheduler.urls")),
 

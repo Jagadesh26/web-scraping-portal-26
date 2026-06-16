@@ -15,6 +15,8 @@ from pathlib import Path
 
 import dj_database_url
 import environ
+from celery.schedules import crontab
+
 
 BASE_DIR = Path(__file__).resolve().parent.parent.parent
 
@@ -64,6 +66,7 @@ INSTALLED_APPS = [
     "apps.notifications.apps.NotificationsConfig",
     "apps.profiles.apps.ProfilesConfig",
     "apps.recommendations.apps.RecommendationsConfig",
+    "apps.resume_checker.apps.ResumeCheckerConfig",
     "apps.resumes.apps.ResumesConfig",
     "apps.scheduler.apps.SchedulerConfig",
 ]
@@ -259,3 +262,61 @@ CORS_ALLOWED_ORIGINS = [
 ]
 
 CORS_ALLOW_CREDENTIALS = True
+
+
+
+CELERY_BROKER_URL = (
+    env(
+        "CELERY_BROKER_URL",
+        default="redis://localhost:6379/0"
+    )
+)
+
+CELERY_RESULT_BACKEND = (
+    env(
+        "CELERY_RESULT_BACKEND",
+        default="redis://localhost:6379/0"
+    )
+)
+
+
+
+CELERY_BEAT_SCHEDULE = {
+
+    "collect-jobs-every-6-hours": {
+
+        "task":
+            "apps.scheduler.tasks.collect_jobs_task",
+
+        "schedule":
+            crontab(
+                minute=0,
+                hour="*/6",
+            ),
+    },
+
+    "deactivate-stale-jobs": {
+
+        "task":
+            "apps.scheduler.tasks.deactivate_stale_jobs_task",
+
+        "schedule":
+            crontab(
+                hour=1,
+                minute=0,
+            ),
+    },
+
+    "cleanup-old-jobs": {
+
+        "task":
+            "apps.scheduler.tasks.cleanup_jobs_task",
+
+        "schedule":
+            crontab(
+                day_of_week="sunday",
+                hour=2,
+                minute=0,
+            ),
+    },
+}

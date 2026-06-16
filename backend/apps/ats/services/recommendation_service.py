@@ -1,14 +1,13 @@
 from apps.jobs.models import (
-    Job
+    Job,
+    JobMatch
 )
 
 from apps.ats.services.ats_matching_service import (
     ATSMatchingService
 )
 
-from apps.ats.models import (
-    JobMatch
-)
+
 
 
 class RecommendationService:

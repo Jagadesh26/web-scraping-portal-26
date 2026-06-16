@@ -1,6 +1,6 @@
 from django.urls import path
 
-from .views import RecommendationAPIView, SkillGapAPIView
+from .views import ATSDashboardAPIView, RecommendationAPIView, SkillGapAPIView
 
 urlpatterns = [
 
@@ -20,5 +20,11 @@ urlpatterns = [
         "skill-gap/",
         SkillGapAPIView.as_view(),
         name="skill-gap",
+    ),
+
+    path(
+        "dashboard/",
+        ATSDashboardAPIView.as_view(),
+        name="ats-dashboard",
     ),
 ]

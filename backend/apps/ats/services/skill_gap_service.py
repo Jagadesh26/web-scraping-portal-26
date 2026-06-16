@@ -1,6 +1,7 @@
 from collections import Counter
 
-from apps.ats.models import (
+from apps.jobs.models import (
+    Job,
     JobMatch
 )
 

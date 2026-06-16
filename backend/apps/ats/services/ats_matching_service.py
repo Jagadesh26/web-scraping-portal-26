@@ -1,6 +1,4 @@
-from apps.ats.models import (
-    JobMatch
-)
+
 
 from apps.ats.services.skill_matching_service import (
     SkillMatchingService
@@ -13,6 +11,7 @@ from apps.ats.services.experience_matching_service import (
 from apps.ats.services.preference_matching_service import (
     PreferenceMatchingService
 )
+from apps.jobs.models import JobMatch
 
 
 class ATSMatchingService:
