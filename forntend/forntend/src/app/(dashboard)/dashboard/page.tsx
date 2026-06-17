@@ -10,10 +10,11 @@ import {
   CheckCircle2, 
   Award,
   ChevronRight,
-  MapPin
+  MapPin,
+  ShieldAlert,
+  ArrowRight
 } from "lucide-react";
 
-// Mock Schema definitions for visual pipeline demonstration
 interface MockJob {
   id: string;
   title: string;
@@ -31,143 +32,142 @@ const RECOMMENDED_JOBS: MockJob[] = [
   { id: "5", title: "Data Pipelines Infrastructure Lead", company: "Vortex Intelligence", location: "Remote (Global)", matchScore: 82, type: "Full-Time" }
 ];
 
-export default function EnterpriseDashboardPage() {
+export default function HighFidelityDashboardPage() {
   return (
-    <div className="space-y-8 max-w-[1500px] mx-auto pb-12">
+    <div className="space-y-8 relative bg-radial-gradient min-h-screen">
       
-      {/* Welcome Metadata Hub Header */}
-      <div className="flex flex-col gap-1 sm:flex-row sm:items-center sm:justify-between border-b border-border/40 pb-5">
+      {/* 1. UPPER SAAS WELCOME HEADER PANEL */}
+      <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between border-b border-border/50 pb-6">
         <div>
-          <h1 className="text-xl font-extrabold tracking-tight md:text-2xl text-foreground">
-            Resume Intelligence Hub
+          <h1 className="text-2xl font-black tracking-tight text-foreground sm:text-3xl">
+            Resume Intelligence Workspace
           </h1>
-          <p className="text-xs text-muted-foreground font-medium mt-0.5">
-            Monitor real-time applicant indexing tracking scores and AI-matched market job opportunities.
+          <p className="text-xs text-muted-foreground font-semibold mt-1">
+            Real-time pipeline monitoring, automated ATS matching indices, and parsing telemetry analytics.
           </p>
         </div>
-        <div className="flex items-center gap-2 mt-3 sm:mt-0 px-3 py-1.5 bg-primary/5 text-primary border border-primary/20 rounded-xl text-xs font-bold">
-          <Activity className="h-3.5 w-3.5 animate-pulse" />
-          <span>AI Engine Active v1.0</span>
+        <div className="flex items-center gap-2 self-start sm:self-center px-3.5 py-2 bg-card border border-border/80 rounded-xl premium-shadow text-xs font-bold text-foreground">
+          <span className="h-2 w-2 rounded-full bg-feature-green animate-pulse" />
+          <span>AI Engine Active v1.2</span>
         </div>
       </div>
 
-      {/* Section 1: Premium Metric telemetry matrix cards */}
+      {/* 2. SPECIFIED FEATURE ACCENT KPI TELEMETRY GRID */}
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
         
-        {/* Resume Score Tracking KPI */}
-        <div className="p-5 bg-card border border-border/80 rounded-2xl shadow-sm hover:shadow-md hover:border-border transition-all group">
+        {/* Card A: Resume Score - Blue Accent */}
+        <div className="p-6 bg-card border border-border/60 border-l-4 border-l-feature-blue rounded-2xl premium-shadow hover:-translate-y-0.5 transition-all duration-300 group">
           <div className="flex items-center justify-between">
             <span className="text-[11px] font-bold uppercase tracking-wider text-muted-foreground">Resume ATS Score</span>
-            <div className="p-2 bg-primary/10 rounded-xl text-primary group-hover:scale-105 transition-transform">
+            <div className="p-2.5 bg-feature-blue/5 text-feature-blue rounded-xl group-hover:scale-105 transition-transform">
               <Award className="h-4 w-4" />
             </div>
           </div>
-          <div className="mt-3 flex items-baseline gap-2">
-            <span className="text-2xl font-black tracking-tight">84</span>
-            <span className="text-xs font-semibold text-muted-foreground">/100</span>
+          <div className="mt-4 flex items-baseline gap-1.5">
+            <span className="text-3xl font-black tracking-tight text-foreground">84</span>
+            <span className="text-xs font-bold text-muted-foreground">/100</span>
           </div>
-          <div className="mt-2 flex items-center gap-1.5 text-[11px] text-emerald-600 font-bold dark:text-emerald-500">
-            <TrendingUp className="h-3 w-3" />
-            <span>Top 8% of applicants in pool</span>
+          <div className="mt-3 flex items-center gap-1.5 text-[11px] text-emerald-600 dark:text-emerald-500 font-bold">
+            <TrendingUp className="h-3.5 w-3.5" />
+            <span>Top 8% of sector pool entries</span>
           </div>
         </div>
 
-        {/* Total Job Matches Card */}
-        <div className="p-5 bg-card border border-border/80 rounded-2xl shadow-sm hover:shadow-md hover:border-border transition-all group">
+        {/* Card B: Job Matches - Green Accent */}
+        <div className="p-6 bg-card border border-border/60 border-l-4 border-l-feature-green rounded-2xl premium-shadow hover:-translate-y-0.5 transition-all duration-300 group">
           <div className="flex items-center justify-between">
             <span className="text-[11px] font-bold uppercase tracking-wider text-muted-foreground">AI Job Matches</span>
-            <div className="p-2 bg-primary/10 rounded-xl text-primary group-hover:scale-105 transition-transform">
+            <div className="p-2.5 bg-feature-green/5 text-feature-green rounded-xl group-hover:scale-105 transition-transform">
               <Briefcase className="h-4 w-4" />
             </div>
           </div>
-          <div className="mt-3">
-            <span className="text-2xl font-black tracking-tight">1,248</span>
+          <div className="mt-4">
+            <span className="text-3xl font-black tracking-tight text-foreground">1,248</span>
           </div>
-          <div className="mt-2 text-[11px] text-muted-foreground font-medium">
-            <span className="text-foreground font-bold">142 new</span> matching recommendations today
+          <div className="mt-3 text-[11px] text-muted-foreground font-semibold">
+            <span className="text-feature-green font-extrabold">+142 entries</span> added since last sync
           </div>
         </div>
 
-        {/* Skill Gap Analysis Telemetry */}
-        <div className="p-5 bg-card border border-border/80 rounded-2xl shadow-sm hover:shadow-md hover:border-border transition-all group">
+        {/* Card C: Skill Gap - Amber Accent */}
+        <div className="p-6 bg-card border border-border/60 border-l-4 border-l-feature-amber rounded-2xl premium-shadow hover:-translate-y-0.5 transition-all duration-300 group">
           <div className="flex items-center justify-between">
             <span className="text-[11px] font-bold uppercase tracking-wider text-muted-foreground">Skill Match Gap</span>
-            <div className="p-2 bg-destructive/10 rounded-xl text-destructive group-hover:scale-105 transition-transform">
+            <div className="p-2.5 bg-feature-amber/5 text-feature-amber rounded-xl group-hover:scale-105 transition-transform">
               <Layers className="h-4 w-4" />
             </div>
           </div>
-          <div className="mt-3">
-            <span className="text-2xl font-black tracking-tight text-destructive">-4 Core</span>
+          <div className="mt-4">
+            <span className="text-3xl font-black tracking-tight text-feature-amber">-4 Core</span>
           </div>
-          <div className="mt-2 text-[11px] text-muted-foreground font-medium">
-            Missing stack elements found for peak profiles
+          <div className="mt-3 text-[11px] text-muted-foreground font-semibold flex items-center gap-1">
+            <ShieldAlert className="h-3.5 w-3.5 text-feature-amber/80" />
+            <span>Missing critical container tags</span>
           </div>
         </div>
 
-        {/* Application Hub Pipeline Placement */}
-        <div className="p-5 bg-card border border-border/80 rounded-2xl shadow-sm hover:shadow-md hover:border-border transition-all group">
+        {/* Card D: ATS Dash Score Placement - Purple Accent */}
+        <div className="p-6 bg-card border border-border/60 border-l-4 border-l-feature-purple rounded-2xl premium-shadow hover:-translate-y-0.5 transition-all duration-300 group">
           <div className="flex items-center justify-between">
-            <span className="text-[11px] font-bold uppercase tracking-wider text-muted-foreground">Applications In Pipeline</span>
-            <div className="p-2 bg-primary/10 rounded-xl text-primary group-hover:scale-105 transition-transform">
+            <span className="text-[11px] font-bold uppercase tracking-wider text-muted-foreground">ATS Index Ranking</span>
+            <div className="p-2.5 bg-feature-purple/5 text-feature-purple rounded-xl group-hover:scale-105 transition-transform">
               <Sparkles className="h-4 w-4" />
             </div>
           </div>
-          <div className="mt-3">
-            <span className="text-2xl font-black tracking-tight">18</span>
+          <div className="mt-4">
+            <span className="text-3xl font-black tracking-tight text-foreground">Tier 1</span>
           </div>
-          <div className="mt-2 text-[11px] text-muted-foreground font-medium">
-            <span className="text-primary font-bold">3 active interviews</span> scheduled this cycle
+          <div className="mt-3 text-[11px] text-feature-purple font-extrabold flex items-center gap-1">
+            <span>Optimized for corporate scrapers</span>
           </div>
         </div>
       </div>
 
-      {/* Main Structural Information Grid Split Layout */}
+      {/* 3. DUAL COLUMN INFORMATION WORKSPACE GRID CONTENT */}
       <div className="grid gap-6 lg:grid-cols-3 items-start">
         
-        {/* PRIMARY ZONE: Listings and Structural Improvement Suggestions */}
+        {/* LEFT COMPONENT COLUMN (Takes 2 Columns) */}
         <div className="lg:col-span-2 space-y-6">
           
-          {/* Section 2: Premium Recommended Jobs Section */}
-          <div className="bg-card border border-border/80 rounded-2xl shadow-sm p-6 space-y-4">
-            <div className="flex items-center justify-between border-b border-border/40 pb-3">
+          {/* Recommended Jobs Card Container */}
+          <div className="bg-card border border-border/60 rounded-2xl premium-shadow p-6 space-y-4">
+            <div className="flex items-center justify-between border-b border-border/40 pb-4">
               <div>
-                <h2 className="text-sm font-extrabold tracking-tight text-foreground">Top AI Recommendation Feed</h2>
-                <p className="text-[11px] text-muted-foreground font-medium">Ranked position matching structures adjusted to your indexing file.</p>
+                <h2 className="text-xs font-black uppercase tracking-wider text-foreground">Top AI Recommendation Feed</h2>
+                <p className="text-[11px] text-muted-foreground font-semibold mt-0.5">Ranked position alignment scores optimized to your file profile.</p>
               </div>
-              <button className="text-xs text-primary font-bold flex items-center gap-0.5 hover:underline cursor-pointer">
-                <span>View All Feed</span>
-                <ChevronRight className="h-3.5 w-3.5" />
+              <button className="text-xs text-primary font-bold flex items-center gap-0.5 hover:underline cursor-pointer group">
+                <span>View Full Board</span>
+                <ChevronRight className="h-3.5 w-3.5 transition-transform group-hover:translate-x-0.5" />
               </button>
             </div>
 
-            <div className="divide-y divide-border/60">
+            <div className="divide-y divide-border/40">
               {RECOMMENDED_JOBS.map((job) => (
-                <div key={job.id} className="py-4 first:pt-0 last:pb-0 flex items-start justify-between gap-4 group transition-colors">
+                <div key={job.id} className="py-4 first:pt-0 last:pb-0 flex items-start justify-between gap-4 group">
                   <div className="space-y-1">
-                    <h3 className="text-xs font-bold text-foreground group-hover:text-primary transition-colors cursor-pointer">
+                    <h3 className="text-xs font-bold text-foreground group-hover:text-primary transition-colors cursor-pointer leading-snug">
                       {job.title}
                     </h3>
-                    <div className="flex flex-wrap items-center gap-x-2.5 gap-y-1 text-[11px] text-muted-foreground font-medium">
-                      <span className="text-foreground font-semibold">{job.company}</span>
-                      <span className="text-border-foreground/20">•</span>
+                    <div className="flex flex-wrap items-center gap-x-2.5 gap-y-1 text-[11px] text-muted-foreground font-semibold">
+                      <span className="text-foreground/90">{job.company}</span>
+                      <span className="text-border-foreground/10">•</span>
                       <span className="flex items-center gap-1">
                         <MapPin className="h-3 w-3 text-muted-foreground/60" />
                         {job.location}
                       </span>
-                      <span className="text-border-foreground/20">•</span>
-                      <span className="px-1.5 py-0.5 bg-accent text-accent-foreground text-[10px] font-bold rounded">
+                      <span className="text-border-foreground/10">•</span>
+                      <span className="px-1.5 py-0.5 bg-secondary text-secondary-foreground text-[10px] font-bold rounded">
                         {job.type}
                       </span>
                     </div>
                   </div>
 
                   <div className="flex items-center gap-3 flex-shrink-0">
-                    <div className="text-right">
-                      <div className="text-xs font-black text-emerald-600 dark:text-emerald-500 bg-emerald-500/10 px-2 py-0.5 rounded-lg border border-emerald-500/20 inline-block">
-                        {job.matchScore}% Match
-                      </div>
-                    </div>
-                    <button className="text-[11px] font-bold bg-primary text-primary-foreground hover:bg-primary/90 px-3 py-1.5 rounded-xl shadow-sm cursor-pointer transition-all flex items-center gap-0.5">
+                    <span className="text-xs font-black text-emerald-600 dark:text-emerald-500 bg-feature-green/5 dark:bg-feature-green/10 px-2 py-1 rounded-lg border border-feature-green/10 whitespace-nowrap">
+                      {job.matchScore}% Match
+                    </span>
+                    <button className="text-[11px] font-bold bg-zinc-900 dark:bg-zinc-100 text-zinc-50 dark:text-zinc-900 hover:bg-zinc-800 dark:hover:bg-zinc-200 h-8 px-3 rounded-xl shadow-sm transition-all cursor-pointer flex items-center gap-0.5">
                       <span>Apply</span>
                       <ArrowUpRight className="h-3 w-3" />
                     </button>
@@ -177,123 +177,99 @@ export default function EnterpriseDashboardPage() {
             </div>
           </div>
 
-          {/* Section 5: Resume Improvement Advice Hub */}
-          <div className="bg-card border border-border/80 rounded-2xl shadow-sm p-6 space-y-4">
+          {/* Actionable Parsing Optimization Panel */}
+          <div className="bg-card border border-border/60 rounded-2xl premium-shadow p-6 space-y-4">
             <div>
-              <h2 className="text-sm font-extrabold tracking-tight text-foreground">Actionable Indexing Suggestions</h2>
-              <p className="text-[11px] text-muted-foreground font-medium">Execute these changes to elevate matching priority by an estimated 12-18%.</p>
+              <h2 className="text-xs font-black uppercase tracking-wider text-foreground">Actionable Indexing Optimization</h2>
+              <p className="text-[11px] text-muted-foreground font-semibold mt-0.5">Execute these structural adjustments to clear corporate ATS filter rules.</p>
             </div>
 
             <div className="grid gap-3 sm:grid-cols-2">
-              <div className="p-4 border border-border/60 bg-accent/20 rounded-xl space-y-1">
-                <span className="px-2 py-0.5 bg-primary/10 text-primary font-bold text-[10px] rounded-md">Cloud Architectures</span>
-                <h4 className="text-xs font-bold text-foreground mt-1.5">Add Cloud Technologies</h4>
-                <p className="text-[11px] text-muted-foreground font-medium">Integrate specific operational summaries detailing AWS provisioning or deployment pipelines.</p>
+              <div className="p-4 border border-border/60 hover:border-feature-blue/30 bg-background/40 rounded-xl space-y-1.5 transition-colors group cursor-pointer">
+                <span className="px-2 py-0.5 bg-feature-blue/10 text-feature-blue font-bold text-[10px] rounded-md">Cloud Deployment</span>
+                <h4 className="text-xs font-bold text-foreground mt-1 flex items-center gap-1">
+                  <span>Add Cloud Technologies</span>
+                  <ArrowRight className="h-3 w-3 opacity-0 group-hover:opacity-100 group-hover:translate-x-0.5 transition-all" />
+                </h4>
+                <p className="text-[11px] text-muted-foreground font-semibold leading-relaxed">Integrate operational descriptions detailing AWS provisioning setups.</p>
               </div>
 
-              <div className="p-4 border border-border/60 bg-accent/20 rounded-xl space-y-1">
-                <span className="px-2 py-0.5 bg-primary/10 text-primary font-bold text-[10px] rounded-md">Metrics Impact</span>
-                <h4 className="text-xs font-bold text-foreground mt-1.5">Measurable Achievements</h4>
-                <p className="text-[11px] text-muted-foreground font-medium">Replace passive descriptions with quantitative numbers (e.g., "boosted API runtime operations by 30%").</p>
-              </div>
-
-              <div className="p-4 border border-border/60 bg-accent/20 rounded-xl space-y-1">
-                <span className="px-2 py-0.5 bg-primary/10 text-primary font-bold text-[10px] rounded-md">Architecture Depth</span>
-                <h4 className="text-xs font-bold text-foreground mt-1.5">Improve Project Descriptions</h4>
-                <p className="text-[11px] text-muted-foreground font-medium">Elaborate on backend data topologies and concurrent processing parameters built using Django.</p>
-              </div>
-
-              <div className="p-4 border border-border/60 bg-accent/20 rounded-xl space-y-1">
-                <span className="px-2 py-0.5 bg-primary/10 text-primary font-bold text-[10px] rounded-md">DevOps Pipeline</span>
-                <h4 className="text-xs font-bold text-foreground mt-1.5">Add CI/CD Pipeline Context</h4>
-                <p className="text-[11px] text-muted-foreground font-medium">Detail configuration handling for workflow build templates using GitHub Actions or GitLab CI.</p>
+              <div className="p-4 border border-border/60 hover:border-feature-green/30 bg-background/40 rounded-xl space-y-1.5 transition-colors group cursor-pointer">
+                <span className="px-2 py-0.5 bg-feature-green/10 text-feature-green font-bold text-[10px] rounded-md">Metrics Evaluation</span>
+                <h4 className="text-xs font-bold text-foreground mt-1 flex items-center gap-1">
+                  <span>Measurable Achievements</span>
+                  <ArrowRight className="h-3 w-3 opacity-0 group-hover:opacity-100 group-hover:translate-x-0.5 transition-all" />
+                </h4>
+                <p className="text-[11px] text-muted-foreground font-semibold leading-relaxed">Replace descriptive strings with explicit metrics (e.g., "optimized lookup speed by 40%").</p>
               </div>
             </div>
           </div>
 
         </div>
 
-        {/* SECONDARY SIDEBAR ZONE: Insights, Badges matrix and gaps */}
+        {/* RIGHT METRICS SIDEBAR COMPONENT COLUMN (Takes 1 Column) */}
         <div className="space-y-6">
           
-          {/* Section 3: High Contrast Strengths & Weaknesses Panel */}
-          <div className="bg-card border border-border/80 rounded-2xl shadow-sm p-6 space-y-4">
+          {/* Parser Extraction Insights Insights panel card */}
+          <div className="bg-card border border-border/60 rounded-2xl premium-shadow p-6 space-y-4">
             <div>
-              <h2 className="text-sm font-extrabold tracking-tight text-foreground">Parser Extraction Insights</h2>
-              <p className="text-[11px] text-muted-foreground font-medium">AI vector alignment against market job requisitions.</p>
+              <h2 className="text-xs font-black uppercase tracking-wider text-foreground">Parser Extraction Insights</h2>
+              <p className="text-[11px] text-muted-foreground font-semibold mt-0.5">AI vector processing maps aligned to global demand models.</p>
             </div>
 
             <div className="space-y-4">
-              {/* Strengths Container */}
+              {/* Strengths mapping array stack block */}
               <div className="space-y-2">
-                <div className="text-[10px] font-bold text-emerald-600 dark:text-emerald-500 tracking-wider uppercase flex items-center gap-1">
-                  <CheckCircle2 className="h-3.5 w-3.5 text-emerald-500" />
+                <div className="text-[10px] font-black text-emerald-600 dark:text-emerald-500 tracking-wider uppercase flex items-center gap-1">
+                  <CheckCircle2 className="h-3.5 w-3.5 text-feature-green" />
                   <span>Verified Platform Strengths</span>
                 </div>
-                <ul className="space-y-1.5 text-xs font-semibold text-foreground pl-1">
-                  <li className="flex items-center gap-2 bg-accent/40 px-2.5 py-1.5 rounded-lg border border-border/40">
-                    <span className="h-1.5 w-1.5 rounded-full bg-emerald-500" />
+                <div className="space-y-1.5 text-xs font-semibold text-foreground">
+                  <div className="px-3 py-2 bg-background border border-border/60 rounded-xl flex items-center gap-2">
+                    <span className="h-1.5 w-1.5 rounded-full bg-feature-green" />
                     <span>Strong Python Core Mastery</span>
-                  </li>
-                  <li className="flex items-center gap-2 bg-accent/40 px-2.5 py-1.5 rounded-lg border border-border/40">
-                    <span className="h-1.5 w-1.5 rounded-full bg-emerald-500" />
+                  </div>
+                  <div className="px-3 py-2 bg-background border border-border/60 rounded-xl flex items-center gap-2">
+                    <span className="h-1.5 w-1.5 rounded-full bg-feature-green" />
                     <span>High-Density Project Portfolio</span>
-                  </li>
-                  <li className="flex items-center gap-2 bg-accent/40 px-2.5 py-1.5 rounded-lg border border-border/40">
-                    <span className="h-1.5 w-1.5 rounded-full bg-emerald-500" />
-                    <span>Relevant Architectural Experience</span>
-                  </li>
-                </ul>
+                  </div>
+                </div>
               </div>
 
-              {/* Weaknesses/Gaps Container */}
+              {/* Weaknesses mapping array stack block */}
               <div className="space-y-2">
-                <div className="text-[10px] font-bold text-amber-600 dark:text-amber-500 tracking-wider uppercase flex items-center gap-1">
-                  <AlertTriangle className="h-3.5 w-3.5 text-amber-500" />
-                  <span>Identified Indexing Vulnerabilities</span>
+                <div className="text-[10px] font-black text-feature-amber tracking-wider uppercase flex items-center gap-1">
+                  <AlertTriangle className="h-3.5 w-3.5" />
+                  <span>Identified Filter Weaknesses</span>
                 </div>
-                <ul className="space-y-1.5 text-xs font-semibold text-foreground pl-1">
-                  <li className="flex items-center gap-2 bg-accent/40 px-2.5 py-1.5 rounded-lg border border-border/40">
-                    <span className="h-1.5 w-1.5 rounded-full bg-amber-500" />
-                    <span>Missing Cloud Requisitions (AWS)</span>
-                  </li>
-                  <li className="flex items-center gap-2 bg-accent/40 px-2.5 py-1.5 rounded-lg border border-border/40">
-                    <span className="h-1.5 w-1.5 rounded-full bg-amber-500" />
+                <div className="space-y-1.5 text-xs font-semibold text-foreground">
+                  <div className="px-3 py-2 bg-background border border-border/60 rounded-xl flex items-center gap-2">
+                    <span className="h-1.5 w-1.5 rounded-full bg-feature-amber" />
                     <span>Missing Virtualization Context (Docker)</span>
-                  </li>
-                  <li className="flex items-center gap-2 bg-accent/40 px-2.5 py-1.5 rounded-lg border border-border/40">
-                    <span className="h-1.5 w-1.5 rounded-full bg-amber-500" />
-                    <span>Missing Continuous Integration (CI/CD)</span>
-                  </li>
-                </ul>
+                  </div>
+                  <div className="px-3 py-2 bg-background border border-border/60 rounded-xl flex items-center gap-2">
+                    <span className="h-1.5 w-1.5 rounded-full bg-feature-amber" />
+                    <span>Missing Automated Deployment (CI/CD)</span>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
 
-          {/* Section 4: Chip Badges Skill Gap Matrix */}
-          <div className="bg-card border border-border/80 rounded-2xl shadow-sm p-6 space-y-4">
+          {/* Chip badge skill block cluster */}
+          <div className="bg-card border border-border/60 rounded-2xl premium-shadow p-6 space-y-4">
             <div>
-              <h2 className="text-sm font-extrabold tracking-tight text-foreground">Target Stack Skill Gaps</h2>
-              <p className="text-[11px] text-muted-foreground font-medium">Acquire or index these keywords to clear automated platform filters.</p>
+              <h2 className="text-xs font-black uppercase tracking-wider text-foreground">Target Stack Skill Gaps</h2>
+              <p className="text-[11px] text-muted-foreground font-semibold mt-0.5">Acquire or index these keys to clear automated filters.</p>
             </div>
 
-            <div className="flex flex-wrap gap-2 pt-1">
-              <div className="px-3 py-1.5 bg-destructive/5 text-destructive border border-destructive/20 text-xs font-bold rounded-xl flex items-center gap-1.5 shadow-sm">
-                <span className="h-1.5 w-1.5 rounded-full bg-destructive animate-pulse" />
-                <span>Docker Containerization</span>
-              </div>
-              <div className="px-3 py-1.5 bg-destructive/5 text-destructive border border-destructive/20 text-xs font-bold rounded-xl flex items-center gap-1.5 shadow-sm">
-                <span className="h-1.5 w-1.5 rounded-full bg-destructive animate-pulse" />
-                <span>Amazon Web Services (AWS)</span>
-              </div>
-              <div className="px-3 py-1.5 bg-destructive/5 text-destructive border border-destructive/20 text-xs font-bold rounded-xl flex items-center gap-1.5 shadow-sm">
-                <span className="h-1.5 w-1.5 rounded-full bg-destructive animate-pulse" />
-                <span>Redis Distributed Caching</span>
-              </div>
-              <div className="px-3 py-1.5 bg-destructive/5 text-destructive border border-destructive/20 text-xs font-bold rounded-xl flex items-center gap-1.5 shadow-sm">
-                <span className="h-1.5 w-1.5 rounded-full bg-destructive animate-pulse" />
-                <span>Kubernetes Orchestration</span>
-              </div>
+            <div className="flex flex-wrap gap-1.5 pt-1">
+              {["Docker Containerization", "Amazon Web Services", "Redis Clusters", "Kubernetes Mesh"].map((skill) => (
+                <span key={skill} className="px-2.5 py-1.5 bg-feature-amber/5 text-feature-amber border border-feature-amber/20 text-[11px] font-bold rounded-xl flex items-center gap-1.5">
+                  <span className="h-1.5 w-1.5 rounded-full bg-feature-amber animate-pulse" />
+                  <span>{skill}</span>
+                </span>
+              ))}
             </div>
           </div>
 

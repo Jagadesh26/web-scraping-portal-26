@@ -18,6 +18,7 @@ from apps.accounts.serializers.login import (
     UserSessionSerializer,
 )
 from apps.accounts.services.auth_service import AuthService
+from apps.accounts.tasks import send_password_reset_email_task, send_verification_email_task
 
 
 
@@ -112,7 +113,9 @@ class ForgotPasswordAPIView(APIView):
         ).first()
 
         if user and user.is_active:
-            AuthService.send_password_reset_email(user)
+            send_password_reset_email_task.delay(
+                str(user.id)
+            )
 
         return Response(
             {
@@ -212,7 +215,7 @@ class ResendVerificationEmailAPIView(APIView):
 
         user = User.objects.filter(email=serializer.validated_data["email"]).first()
         if user and user.is_active and not user.is_verified:
-            AuthService.send_verification_email(user)
+            send_verification_email_task.delay(str(user.id))
 
         return Response(
             {

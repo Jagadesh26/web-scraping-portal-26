@@ -7,6 +7,8 @@ from django.utils import timezone
 from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework_simplejwt.exceptions import TokenError
 
+from apps.accounts.tasks import send_verification_email_task
+
 try:
     from rest_framework_simplejwt.token_blacklist.models import (
         BlacklistedToken,
@@ -45,7 +47,10 @@ class AuthService:
             user=user
         )
 
-        AuthService.send_verification_email(user)
+
+        send_verification_email_task.delay(
+            str(user.id)
+        )
 
         return user
 
@@ -152,9 +157,9 @@ class AuthService:
         send_mail(
             subject="Verify your email",
             message=f"Use this link to verify your email: {verification_url}",
-            from_email=getattr(settings, "DEFAULT_FROM_EMAIL", None),
+            from_email=settings.DEFAULT_FROM_EMAIL,
             recipient_list=[user.email],
-            fail_silently=True,
+            fail_silently=False,
         )
 
     @staticmethod

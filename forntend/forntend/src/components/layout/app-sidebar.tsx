@@ -3,18 +3,22 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useUiStore } from "@/core/store/uiStore";
-import { useAuthStore } from "@/core/store/authStore";
+// FIX 1: Point to the correct unified feature store path where real tokens live
+import { useAuthStore } from "@/features/auth/store/authStore";
+import { useLogout } from "@/features/auth/hooks/userLogut";
 import { dashboardNavigationStructure } from "@/core/config/navigation";
 import { cn } from "@/lib/utils";
 import * as React from "react";
-import { ChevronLeft, ChevronRight, ChevronDown, Sparkles } from "lucide-react";
+import { ChevronLeft, ChevronRight, ChevronDown, Sparkles, LogOut, Loader2 } from "lucide-react";
 
 export function AppSidebar() {
   const pathname = usePathname();
   const user = useAuthStore((state) => state.user);
   const { isSidebarCollapsed, toggleSidebar } = useUiStore();
   
-  // Track open states for collapsible navigation clusters local to sidebar context
+  // Connect your refactored mutation hook cleanly
+  const { mutate: handleLogout, isPending: isLoggingOut } = useLogout();
+  
   const [openGroups, setOpenGroups] = React.useState<Record<string, boolean>>({
     Resume: true,
     "Jobs Module": true,
@@ -25,8 +29,19 @@ export function AppSidebar() {
     setOpenGroups((prev) => ({ ...prev, [title]: !prev[title] }));
   };
 
-  const fallbackName = user?.fullName || "Candidate User";
-  const userInitials = fallbackName.split(" ").map(n => n[0]).join("").toUpperCase().slice(0, 2);
+  // Maps backend user records (first_name/last_name) or custom fullName values defensively
+  const fallbackName = 
+    user?.first_name 
+      ? `${user.first_name} ${user.last_name || ""}`.trim() 
+      : (user as any)?.fullName || "Candidate User";
+
+  const userInitials = fallbackName
+  ? fallbackName
+      .split(" ")
+      .map((n: string[]) => n[0].match(/[a-zA-Z]/) ? n[0].toUpperCase() : "")
+      .join("")
+      .slice(0, 2)
+  : "";
 
   return (
     <aside
@@ -60,10 +75,8 @@ export function AppSidebar() {
           const hasSubItems = !!group.items;
           const isGroupOpen = openGroups[group.title];
 
-          // Determine if group or any sub-item is currently active
           const isDirectActive = group.href ? pathname === group.href : false;
           const isSubActive = group.items?.some(sub => pathname === sub.href) || false;
-          const isAnyActive = isDirectActive || isSubActive;
 
           if (!hasSubItems && group.href) {
             return (
@@ -102,7 +115,7 @@ export function AppSidebar() {
                 )}
               </button>
 
-              {/* Render Submenu items exclusively if sidebar expanded and open */}
+              {/* Render Submenu items */}
               {!isSidebarCollapsed && isGroupOpen && group.items && (
                 <div className="pl-7 space-y-1 border-l border-border/80 ml-5 mt-0.5 animate-in fade-in duration-200">
                   {group.items.map((sub) => {
@@ -130,15 +143,38 @@ export function AppSidebar() {
       </nav>
 
       {/* Footprint Profiler Component */}
-      <div className="p-4 border-t border-border/60 flex items-center gap-3 overflow-hidden">
-        <div className="h-8 w-8 flex-shrink-0 rounded-lg bg-primary/10 text-primary flex items-center justify-center font-bold text-xs border border-primary/20">
-          {userInitials}
-        </div>
-        {!isSidebarCollapsed && (
-          <div className="flex flex-col min-w-0 animate-in fade-in duration-200">
-            <span className="text-xs font-bold text-foreground truncate">{fallbackName}</span>
-            <span className="text-[10px] text-muted-foreground truncate uppercase tracking-wider font-semibold">Premium Platform Tier</span>
+      <div className="p-4 border-t border-border/60 flex items-center justify-between gap-2 overflow-hidden bg-background/20">
+        <div className="flex items-center gap-3 min-w-0">
+          <div className="h-8 w-8 flex-shrink-0 rounded-lg bg-primary/10 text-primary flex items-center justify-center font-bold text-xs border border-primary/20">
+            {userInitials}
           </div>
+          {!isSidebarCollapsed && (
+            <div className="flex flex-col min-w-0 animate-in fade-in duration-200">
+              <span className="text-xs font-bold text-foreground truncate">{fallbackName}</span>
+              <span className="text-[10px] text-muted-foreground truncate uppercase tracking-wider font-semibold">Premium Tier</span>
+            </div>
+          )}
+        </div>
+
+        {/* FIX 2: INJECT THE PHYSICALLY MISSING LOGOUT INTERACTION BUTTON */}
+        {!isSidebarCollapsed && (
+          <button
+            type="button"
+            disabled={isLoggingOut}
+            onClick={(e) => {
+              e.preventDefault();
+              e.stopPropagation();
+              handleLogout();
+            }}
+            className="p-2 rounded-xl text-muted-foreground hover:text-destructive hover:bg-destructive/10 transition-all cursor-pointer disabled:opacity-40 flex-shrink-0"
+            title="Log out session"
+          >
+            {isLoggingOut ? (
+              <Loader2 className="h-3.5 w-3.5 animate-spin" />
+            ) : (
+              <LogOut className="h-3.5 w-3.5" />
+            )}
+          </button>
         )}
       </div>
     </aside>
