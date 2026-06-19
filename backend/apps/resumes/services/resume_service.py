@@ -4,6 +4,7 @@ from apps.resumes.services.cloudinary_service import (
 )
 
 
+
 class ResumeService:
 
     @staticmethod

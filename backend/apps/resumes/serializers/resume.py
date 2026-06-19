@@ -5,6 +5,7 @@ from apps.resumes.models.analysis import ResumeAnalysis
 from apps.resumes.models.education import ResumeEducation
 from apps.resumes.models.experience import ResumeExperience
 from apps.resumes.models.project import ResumeProject
+from apps.resumes.models.recommendation import ResumeRecommendation
 from apps.resumes.models.resume_skill import ResumeSkill
 
 
@@ -41,6 +42,13 @@ class ResumeAnalysisSerializer(
             "summary",
             "total_experience",
             "current_designation",
+            "overall_score",
+            "skills_score",
+            "experience_score",
+            "education_score",
+            "project_score",
+            "keyword_score",
+            "completeness_score",
             "created_at",
         )
 
@@ -86,6 +94,7 @@ class ResumeExperienceSerializer(
             "designation",
             "start_date",
             "end_date",
+            "years_of_experience",
             "description",
         )
 
@@ -123,4 +132,20 @@ class ResumeProjectSerializer(
             "project_name",
             "description",
             "technologies",
+        )
+
+
+class ResumeRecommendationSerializer(
+    serializers.ModelSerializer
+):
+
+    class Meta:
+
+        model = ResumeRecommendation
+
+        fields = (
+            "id",
+            "category",
+            "recommendation",
+            "created_at",
         )

@@ -5,11 +5,16 @@ from rest_framework.permissions import (
     IsAuthenticated
 )
 
+from config.authentication import (
+    ProjectJWTAuthentication
+)
+
 from apps.resumes.serializers.resume import (
     ResumeAnalysisSerializer,
     ResumeEducationSerializer,
     ResumeExperienceSerializer,
     ResumeProjectSerializer,
+    ResumeRecommendationSerializer,
     ResumeSerializer,
     ResumeSkillSerializer,
 )
@@ -20,6 +25,9 @@ from apps.resumes.serializers.resume_upload import (
 from apps.resumes.services.resume_service import (
     ResumeService
 )
+from apps.resumes.services.resume_analysis_service import (
+    ResumeAnalysisService
+)
 
 
 from apps.resumes.models import (
@@ -29,10 +37,15 @@ from apps.resumes.models import (
     ResumeExperience,
     ResumeEducation,
     ResumeProject,
+    ResumeRecommendation,
 )
 
 
 class ResumeUploadAPIView(APIView):
+
+    authentication_classes = [
+        ProjectJWTAuthentication
+    ]
 
     permission_classes = [
         IsAuthenticated
@@ -63,10 +76,19 @@ class ResumeUploadAPIView(APIView):
             )
         )
 
+        ResumeAnalysisService.process_resume(
+            resume,
+            resume_file
+        )
+
+        resume.refresh_from_db(
+            fields=["status"]
+        )
+
         return Response(
             {
                 "success": True,
-                "message": "Resume uploaded successfully.",
+                "message": "Resume uploaded successfully. Analysis generated automatically.",
                 "data": {
                     "resume_id": str(
                         resume.id
@@ -82,6 +104,10 @@ class ResumeUploadAPIView(APIView):
 
 
 class ResumeAPIView(APIView):
+
+    authentication_classes = [
+        ProjectJWTAuthentication
+    ]
 
     permission_classes = [
         IsAuthenticated
@@ -120,6 +146,10 @@ class ResumeAPIView(APIView):
 
 class ResumeDeleteAPIView(APIView):
 
+    authentication_classes = [
+        ProjectJWTAuthentication
+    ]
+
     permission_classes = [
         IsAuthenticated
     ]
@@ -154,6 +184,10 @@ class ResumeDeleteAPIView(APIView):
 
 
 class ResumeAnalysisAPIView(APIView):
+
+    authentication_classes = [
+        ProjectJWTAuthentication
+    ]
 
     permission_classes = [
         IsAuthenticated
@@ -207,6 +241,10 @@ class ResumeAnalysisAPIView(APIView):
 
 class ResumeSkillAPIView(APIView):
 
+    authentication_classes = [
+        ProjectJWTAuthentication
+    ]
+
     permission_classes = [
         IsAuthenticated
     ]
@@ -248,6 +286,10 @@ class ResumeSkillAPIView(APIView):
 
 
 class ResumeExperienceAPIView(APIView):
+
+    authentication_classes = [
+        ProjectJWTAuthentication
+    ]
 
     permission_classes = [
         IsAuthenticated
@@ -293,6 +335,10 @@ class ResumeExperienceAPIView(APIView):
 
 class ResumeEducationAPIView(APIView):
 
+    authentication_classes = [
+        ProjectJWTAuthentication
+    ]
+
     permission_classes = [
         IsAuthenticated
     ]
@@ -337,6 +383,10 @@ class ResumeEducationAPIView(APIView):
 
 class ResumeProjectAPIView(APIView):
 
+    authentication_classes = [
+        ProjectJWTAuthentication
+    ]
+
     permission_classes = [
         IsAuthenticated
     ]
@@ -368,6 +418,49 @@ class ResumeProjectAPIView(APIView):
                 projects,
                 many=True
             )
+        )
+
+        return Response(
+            {
+                "success": True,
+                "data": serializer.data
+            }
+        )
+
+
+class ResumeRecommendationAPIView(APIView):
+
+    authentication_classes = [
+        ProjectJWTAuthentication
+    ]
+
+    permission_classes = [
+        IsAuthenticated
+    ]
+
+    def get(self, request):
+
+        resume = Resume.objects.filter(
+            user=request.user
+        ).first()
+
+        if not resume:
+
+            return Response(
+                {
+                    "success": False,
+                    "message": "Resume not found."
+                },
+                status=status.HTTP_404_NOT_FOUND
+            )
+
+        recommendations = ResumeRecommendation.objects.filter(
+            resume=resume
+        )
+
+        serializer = ResumeRecommendationSerializer(
+            recommendations,
+            many=True
         )
 
         return Response(

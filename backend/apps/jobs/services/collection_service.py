@@ -23,6 +23,8 @@ from apps.jobs.collectors.remoteok import (
 from apps.jobs.collectors.wellfound import (
     WellfoundCollector,
 )
+from apps.jobs.collectors.foundit import FounditCollector
+from apps.jobs.collectors.nakuri import NaukriCollector
 
 
 COLLECTORS = [
@@ -36,6 +38,10 @@ COLLECTORS = [
     GreenhouseCollector,
 
     WorkdayCollector,
+
+    FounditCollector,
+
+    NaukriCollector,
 
 ]
 

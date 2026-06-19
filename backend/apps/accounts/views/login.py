@@ -52,7 +52,10 @@ class LoginAPIView(APIView):
             {
                 "success": True,
                 "message": "Login successful",
-                "data": tokens
+                "data": tokens,
+                "tokens": tokens,
+                "access": tokens["access"],
+                "refresh": tokens["refresh"],
             },
             status=status.HTTP_200_OK
         )
@@ -75,10 +78,15 @@ class CustomTokenRefreshView(TokenRefreshView):
                 "message": "Invalid or expired refresh token"
             }, status=status.HTTP_401_UNAUTHORIZED)
 
+        tokens = serializer.validated_data
+
         return Response({
             "success": True,
             "message": "Access token refreshed successfully",
-            "data": serializer.validated_data
+            "data": tokens,
+            "tokens": tokens,
+            "access": tokens["access"],
+            "refresh": tokens.get("refresh"),
         }, status=status.HTTP_200_OK)
 
 

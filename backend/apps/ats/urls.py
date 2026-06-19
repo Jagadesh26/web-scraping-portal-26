@@ -1,6 +1,13 @@
 from django.urls import path
 
-from .views import ATSDashboardAPIView, RecommendationAPIView, SkillGapAPIView
+from .views import (
+    ATSDashboardAPIView,
+    ATSJobRecommendationAPIView,
+    MatchScoreAPIView,
+    RecommendationAPIView,
+    RecommendationDetailAPIView,
+    SkillGapAPIView,
+)
 
 urlpatterns = [
 
@@ -11,9 +18,21 @@ urlpatterns = [
     ),
 
     path(
-        "recommendation-detail/<uuid:id>/",
-        RecommendationAPIView.as_view(),
+        "recommendation-detail/<uuid:job_id>/",
+        RecommendationDetailAPIView.as_view(),
         name="recommendation-detail",
+    ),
+
+    path(
+        "match-score/<uuid:job_id>/",
+        MatchScoreAPIView.as_view(),
+        name="ats-match-score",
+    ),
+
+    path(
+        "recommendations/<uuid:job_id>/",
+        ATSJobRecommendationAPIView.as_view(),
+        name="ats-job-recommendations",
     ),
 
     path(

@@ -5,6 +5,9 @@ from apps.jobs.models import (
 from apps.resumes.models import (
     Skill
 )
+from apps.resumes.services.skill_extractor_service import (
+    SkillExtractorService
+)
 
 
 class JobSkillExtractorService:
@@ -18,22 +21,46 @@ class JobSkillExtractorService:
             job.description or ""
         ).lower()
 
-        skills = Skill.objects.all()
-
         created_count = 0
 
-        for skill in skills:
+        extracted_skills = SkillExtractorService.extract_skills_from_text(
+            text
+        )
 
-            if (
-                skill.name.lower()
-                in text
-            ):
+        catalog_categories = dict(
+            SkillExtractorService.get_catalog_items()
+        )
 
-                JobSkill.objects.get_or_create(
+        for skill_name in extracted_skills:
+
+            skill, _ = Skill.objects.get_or_create(
+                name=skill_name,
+                defaults={
+                    "category": catalog_categories.get(
+                        skill_name,
+                        ""
+                    )
+                }
+            )
+
+            _, created = JobSkill.objects.get_or_create(
+                job=job,
+                skill=skill
+            )
+
+            if created:
+                created_count += 1
+
+        for skill in Skill.objects.all():
+
+            if skill.name.lower() in text:
+
+                _, created = JobSkill.objects.get_or_create(
                     job=job,
                     skill=skill
                 )
 
-                created_count += 1
+                if created:
+                    created_count += 1
 
         return created_count

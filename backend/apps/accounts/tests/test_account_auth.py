@@ -130,6 +130,30 @@ class AccountAuthAPITests(APITestCase):
         session.refresh_from_db()
         self.assertFalse(session.is_active)
 
+    def test_auth_responses_expose_access_token_for_bearer_auth(self):
+        user = self.create_user(is_verified=True)
+
+        response = self.client.post(
+            reverse("login"),
+            {"email": user.email, "password": self.password},
+            format="json",
+        )
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.data["access"], response.data["data"]["access"])
+        self.assertEqual(response.data["refresh"], response.data["data"]["refresh"])
+        self.assertEqual(response.data["tokens"], response.data["data"])
+
+        response = self.client.post(
+            reverse("token-refresh"),
+            {"refresh": response.data["refresh"]},
+            format="json",
+        )
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.data["access"], response.data["data"]["access"])
+        self.assertEqual(response.data["tokens"], response.data["data"])
+
     def test_change_password_revokes_sessions(self):
         user = self.create_user(is_verified=True)
         self.authenticate(user)

@@ -114,15 +114,48 @@ class JobListAPIView(APIView):
             )
         )
 
+
+        from urllib.parse import urlencode
+
+        base_url = request.build_absolute_uri(
+            request.path
+        )
+
+        query_params = request.GET.copy()
+
+        next_url = None
+        previous_url = None
+
+        if end < total:
+
+            query_params["page"] = page + 1
+
+            next_url = (
+                f"{base_url}?"
+                f"{query_params.urlencode()}"
+            )
+
+        if page > 1:
+
+            query_params["page"] = page - 1
+
+            previous_url = (
+                f"{base_url}?"
+                f"{query_params.urlencode()}"
+            )
+
         return Response(
             {
                 "success": True,
                 "total": total,
                 "page": page,
                 "page_size": page_size,
+                "next": next_url,
+                "previous": previous_url,
                 "data": serializer.data,
             }
         )
+
     
 
 

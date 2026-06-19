@@ -25,9 +25,12 @@ class JobMatchSerializer(
         model = JobMatch
 
         fields = (
+            "id",
+            "job",
             "job_title",
             "company_name",
             "final_score",
+            "match_category",
             "matched_skills",
             "missing_skills",
             "apply_url",
@@ -62,14 +65,17 @@ class JobMatchDetailSerializer(
 
             "skill_score",
             "experience_score",
-            "preference_score",
-            "location_score",
-            "ai_score",
+            "education_score",
+            "project_score",
+            "resume_quality_score",
 
             "final_score",
+            "match_category",
 
             "matched_skills",
             "missing_skills",
+            "recommendations",
+            "improvement_suggestions",
 
             "apply_url",
         )

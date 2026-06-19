@@ -51,4 +51,10 @@ urlpatterns = [
         ResumeProjectAPIView.as_view(),
         name="resume-projects",
     ),
+
+    path(
+        "recommendations/",
+        ResumeRecommendationAPIView.as_view(),
+        name="resume-recommendations",
+    ),
 ]

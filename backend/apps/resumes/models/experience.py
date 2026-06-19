@@ -40,5 +40,11 @@ class ResumeExperience(models.Model):
         blank=True
     )
 
+    years_of_experience = models.DecimalField(
+        max_digits=5,
+        decimal_places=2,
+        default=0
+    )
+
     class Meta:
         db_table = "resume_experiences"

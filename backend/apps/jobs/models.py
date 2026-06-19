@@ -288,6 +288,24 @@ class JobMatch(models.Model):
         default=0
     )
 
+    education_score = models.DecimalField(
+        max_digits=5,
+        decimal_places=2,
+        default=0
+    )
+
+    project_score = models.DecimalField(
+        max_digits=5,
+        decimal_places=2,
+        default=0
+    )
+
+    resume_quality_score = models.DecimalField(
+        max_digits=5,
+        decimal_places=2,
+        default=0
+    )
+
     location_score = models.DecimalField(
         max_digits=5,
         decimal_places=2,
@@ -314,6 +332,19 @@ class JobMatch(models.Model):
         default=list
     )
 
+    recommendations = models.JSONField(
+        default=list
+    )
+
+    improvement_suggestions = models.JSONField(
+        default=list
+    )
+
+    match_category = models.CharField(
+        max_length=50,
+        blank=True
+    )
+
     created_at = models.DateTimeField(
         auto_now_add=True
     )
@@ -330,3 +361,43 @@ class JobMatch(models.Model):
             "user",
             "job",
         )
+
+
+
+
+class SearchKeyword(
+    models.Model
+):
+
+    id = models.UUIDField(
+        primary_key=True,
+        default=uuid.uuid4,
+        editable=False,
+    )
+
+    keyword = models.CharField(
+        max_length=255,
+        unique=True,
+    )
+
+    is_active = models.BooleanField(
+        default=True,
+    )
+
+    created_at = models.DateTimeField(
+        auto_now_add=True,
+    )
+
+    updated_at = models.DateTimeField(
+        auto_now=True,
+    )
+
+    class Meta:
+
+        db_table = "search_keywords"
+
+    def __str__(
+        self
+    ):
+
+        return self.keyword

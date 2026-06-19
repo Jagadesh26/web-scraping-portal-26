@@ -14,10 +14,10 @@ class ResumeScore(
         editable=False,
     )
 
-    user = models.OneToOneField(
+    user = models.ForeignKey(
         settings.AUTH_USER_MODEL,
         on_delete=models.CASCADE,
-        related_name="resume_score",
+        related_name="resume_scores",
     )
 
     overall_score = models.DecimalField(

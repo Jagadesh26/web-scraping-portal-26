@@ -319,4 +319,16 @@ CELERY_BEAT_SCHEDULE = {
                 minute=0,
             ),
     },
+
+    "collect-foundit-jobs": {
+
+        "task":
+            "apps.scheduler.tasks.collect_foundit_jobs",
+
+        "schedule":
+            crontab(
+                hour="*/6",
+                minute=0,
+            ),
+    },
 }

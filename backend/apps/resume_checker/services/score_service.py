@@ -128,21 +128,19 @@ class ResumeScoreService:
         )
 
         with transaction.atomic():
-            score, _ = ResumeScore.objects.update_or_create(
+            score = ResumeScore.objects.create(
                 user=user,
-                defaults={
-                    **component_scores,
-                    "overall_score": overall_score,
-                    "strengths": recommendation_data[
-                        "strengths"
-                    ],
-                    "weaknesses": recommendation_data[
-                        "weaknesses"
-                    ],
-                    "recommendations": recommendation_data[
-                        "recommendations"
-                    ],
-                },
+                overall_score=overall_score,
+                **component_scores,
+                strengths=recommendation_data[
+                    "strengths"
+                ],
+                weaknesses=recommendation_data[
+                    "weaknesses"
+                ],
+                recommendations=recommendation_data[
+                    "recommendations"
+                ],
             )
 
         score.matched_keywords = keywords.get(
@@ -162,5 +160,58 @@ class ResumeScoreService:
     ):
         return ResumeScore.objects.filter(
             user=user
+        ).order_by(
+            "-created_at"
         ).first()
+
+    @staticmethod
+    def get_history(
+        user
+    ):
+        """Get all resume scores for a user ordered by creation date."""
+        return list(
+            ResumeScore.objects.filter(
+                user=user
+            ).order_by(
+                "-created_at"
+            ).values(
+                "overall_score",
+                "created_at"
+            )
+        )
+
+    @staticmethod
+    def get_missing_skills(
+        user
+    ):
+        """Get missing skills by comparing resume skills with market skills."""
+        from apps.resume_checker.services.constants import MARKET_SKILLS
+
+        resume = ResumeScoreService.get_resume(user)
+
+        if not resume:
+            return None
+
+        # Get skills from the resume
+        skills = list(
+            resume.skills.select_related(
+                "skill"
+            )
+        )
+        skill_names = [
+            item.skill.name.strip().lower()
+            for item in skills
+            if item.skill.name
+        ]
+        normalized = {
+            item.lower()
+            for item in skill_names
+        }
+
+        # Find missing skills from market skills
+        missing_skills = list(
+            MARKET_SKILLS - normalized
+        )
+
+        return missing_skills
 

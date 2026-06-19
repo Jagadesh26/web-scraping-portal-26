@@ -312,4 +312,149 @@ class JobNormalizationService:
             "skills":
                 [],
         }
+    
+
+    @staticmethod
+    def normalize_foundit(
+        raw_job
+    ):
+
+        location = ""
+
+        if raw_job.get(
+            "locations"
+        ):
+
+            location = (
+                raw_job["locations"][0]
+                .get(
+                    "city",
+                    ""
+                )
+            )
+
+        return {
+
+            "external_job_id":
+                str(
+                    raw_job.get(
+                        "id"
+                    )
+                ),
+
+            "title":
+                raw_job.get(
+                    "title",
+                    ""
+                ),
+
+            "company_name":
+                raw_job.get(
+                    "company",
+                    {}
+                ).get(
+                    "name",
+                    ""
+                ),
+
+            "location":
+                location,
+
+            "description":
+                raw_job.get(
+                    "description",
+                    ""
+                ),
+
+            "apply_url":
+                "",
+
+            "posted_at":
+                raw_job.get(
+                    "postedAt"
+                ),
+
+            "raw_payload":
+                raw_job,
+
+            "skills":
+                [
+                    skill["text"]
+                    for skill in raw_job.get(
+                        "itSkills",
+                        []
+                    )
+                ],
+        }
+
+
+    @staticmethod
+    def normalize_naukri(
+        raw_job
+    ):
+
+        location = ""
+
+        placeholders = raw_job.get(
+            "placeholders",
+            []
+        )
+
+        for item in placeholders:
+
+            if item.get(
+                "type"
+            ) == "location":
+
+                location = item.get(
+                    "label",
+                    ""
+                )
+
+                break
+
+        return {
+
+            "external_job_id":
+                str(
+                    raw_job.get(
+                        "jobId"
+                    )
+                ),
+
+            "title":
+                raw_job.get(
+                    "title",
+                    ""
+                ),
+
+            "company_name":
+                raw_job.get(
+                    "companyName",
+                    ""
+                ),
+
+            "location":
+                location,
+
+            "description":
+                raw_job.get(
+                    "jobDescription",
+                    ""
+                ),
+
+            "apply_url":
+                raw_job.get(
+                    "applyRedirectUrl",
+                    ""
+                ),
+
+            "posted_at":
+                raw_job.get(
+                    "createdDate"
+                ),
+
+            "raw_payload":
+                raw_job,
+        }
 
