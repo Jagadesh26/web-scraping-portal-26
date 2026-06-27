@@ -5,11 +5,18 @@ from rest_framework.permissions import IsAuthenticated
 
 from apps.profiles.models import JobRole
 from apps.profiles.serializers import JobRoleSerializer
+from config.authentication import ProjectJWTAuthentication
 
 
 class JobRoleAPIView(APIView):
 
-    permission_classes = [IsAuthenticated]
+    authentication_classes = [
+        ProjectJWTAuthentication
+    ]
+
+    permission_classes = [
+        IsAuthenticated
+    ]
 
     def get(self, request):
 

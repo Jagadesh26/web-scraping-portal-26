@@ -15,11 +15,18 @@ from apps.profiles.serializers import (
 from apps.profiles.services.job_preference import (
     JobPreferenceService
 )
+from config.authentication import ProjectJWTAuthentication
 
 
 class JobPreferenceAPIView(APIView):
 
-    permission_classes = [IsAuthenticated]
+    authentication_classes = [
+        ProjectJWTAuthentication
+    ]
+
+    permission_classes = [
+        IsAuthenticated
+    ]
 
     def get(self, request):
 
@@ -96,7 +103,13 @@ class JobPreferenceAPIView(APIView):
 
 class JobPreferenceDeleteAPIView(APIView):
 
-    permission_classes = [IsAuthenticated]
+    authentication_classes = [
+        ProjectJWTAuthentication
+    ]
+
+    permission_classes = [
+        IsAuthenticated
+    ]
 
     def delete(
         self,

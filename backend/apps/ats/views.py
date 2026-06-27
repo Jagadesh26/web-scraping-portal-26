@@ -8,6 +8,7 @@ from apps.ats.serializers import JobMatchDetailSerializer, JobMatchSerializer
 from apps.ats.services.dashboard_service import ATSDashboardService
 from apps.ats.services.skill_gap_service import SkillGapService
 from apps.jobs.models import JobMatch
+from apps.notifications.services import NotificationService
 from config.authentication import ProjectJWTAuthentication
 
 
@@ -47,6 +48,27 @@ class RecommendationAPIView(
                 recommendations[:20],
                 many=True
             )
+        )
+
+        NotificationService.notify(
+            user=request.user,
+            notification_type="recommendation",
+            title="New recommendation",
+            message="You have a new recommendation",
+            send_email=True
+        )
+
+        NotificationService.notify(
+
+            user=request.user,
+
+            notification_type="RECOMMENDATION",
+
+            title="New Job Recommendations Available",
+
+            message=f"{len(serializer.data)} jobs match your profile.",
+
+            send_email=True
         )
 
         return Response(
@@ -155,6 +177,48 @@ class MatchScoreAPIView(
                     "message": "ATS match score not found."
                 },
                 status=404
+            )
+        
+
+        NotificationService.notify(
+
+            user=request.user,
+
+            notification_type="ATS",
+
+            title="ATS Analysis Completed",
+
+            message=f"Your ATS score is {match.final_score}.",
+
+            send_email=False,
+        )
+
+        if match.final_score < 80:
+            NotificationService.notify(
+
+                user=request.user,
+
+                notification_type="ATS",
+
+                title="Excellent ATS Score",
+
+                message=f"Great job! Your ATS score is {match.final_score}.",
+
+                send_email=True,
+            )
+
+        elif match.final_score >= 50:
+            NotificationService.notify(
+
+                user=request.user,
+
+                notification_type="ATS",
+
+                title="ATS Improvement Needed",
+
+                message="Your ATS score is low. Review missing skills and recommendations.",
+
+                send_email=True,
             )
 
         return Response(

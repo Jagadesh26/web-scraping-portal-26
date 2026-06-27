@@ -69,6 +69,7 @@ INSTALLED_APPS = [
     "apps.resume_checker.apps.ResumeCheckerConfig",
     "apps.resumes.apps.ResumesConfig",
     "apps.scheduler.apps.SchedulerConfig",
+    "apps.dashboard.apps.DashboardConfig",
 ]
 
 MIDDLEWARE = [
@@ -80,6 +81,7 @@ MIDDLEWARE = [
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
+    "whitenoise.middleware.WhiteNoiseMiddleware"
 ]
 
 ROOT_URLCONF = "config.urls"
@@ -214,7 +216,7 @@ SIMPLE_JWT = {
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/6.0/howto/static-files/
 
-STATIC_URL = "static/"
+STATIC_ROOT = BASE_DIR / "staticfiles"
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/6.0/ref/settings/#default-auto-field

@@ -4,8 +4,13 @@ from rest_framework.response import Response
 from drf_spectacular.utils import extend_schema
 
 from apps.accounts.serializers.user import UserSerializer
+from config.authentication import ProjectJWTAuthentication
 
 class CurrentUserAPIView(APIView):
+
+    authentication_classes = [
+        ProjectJWTAuthentication
+    ]
 
     permission_classes = [
         IsAuthenticated

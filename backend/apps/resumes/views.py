@@ -5,6 +5,7 @@ from rest_framework.permissions import (
     IsAuthenticated
 )
 
+from apps.notifications.services import NotificationService
 from config.authentication import (
     ProjectJWTAuthentication
 )
@@ -83,6 +84,23 @@ class ResumeUploadAPIView(APIView):
 
         resume.refresh_from_db(
             fields=["status"]
+        )
+
+
+        NotificationService.notify(
+            user=resume.user,
+            notification_type="RESUME",
+            title="Resume Uploaded",
+            message="Your resume was uploaded successfully.",
+            send_email=False
+        )
+
+        NotificationService.notify(
+            user=resume.user,
+            notification_type="RESUME",
+            title="Resume Processing Started",
+            message="We are analyzing your resume.",
+            send_email=False
         )
 
         return Response(
@@ -227,6 +245,14 @@ class ResumeAnalysisAPIView(APIView):
             ResumeAnalysisSerializer(
                 analysis
             )
+        )
+
+        NotificationService.notify(
+            user=resume.user,
+            notification_type="RESUME",
+            title="Resume Analysis Completed",
+            message=f"Your ATS score is {analysis.overall_score}.",
+            send_email=True
         )
 
         return Response(

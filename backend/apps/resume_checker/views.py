@@ -11,11 +11,16 @@ from apps.resume_checker.serializers import (
     ScoreBreakdownSerializer,
 )
 from apps.resume_checker.services.score_service import ResumeScoreService
+from config.authentication import ProjectJWTAuthentication
 
 
 class ResumeCheckerAnalyzeAPIView(
     APIView
 ):
+
+    authentication_classes = [
+        ProjectJWTAuthentication
+    ]
 
     permission_classes = [
         IsAuthenticated
@@ -56,6 +61,10 @@ class ResumeCheckerLatestAPIView(
     APIView
 ):
 
+    authentication_classes = [
+        ProjectJWTAuthentication
+    ]
+
     permission_classes = [
         IsAuthenticated
     ]
@@ -93,6 +102,10 @@ class ResumeCheckerLatestAPIView(
 class ResumeCheckerRecommendationsAPIView(
     APIView
 ):
+
+    authentication_classes = [
+        ProjectJWTAuthentication
+    ]
 
     permission_classes = [
         IsAuthenticated
@@ -137,6 +150,10 @@ class ResumeCheckerScoreBreakdownAPIView(
     projects_score, and keyword_score.
     """
 
+    authentication_classes = [
+        ProjectJWTAuthentication
+    ]
+
     permission_classes = [
         IsAuthenticated
     ]
@@ -178,6 +195,10 @@ class ResumeCheckerHistoryAPIView(
     Endpoint to get user's resume check history.
     Returns a list of scores with timestamps to track improvement over time.
     """
+
+    authentication_classes = [
+        ProjectJWTAuthentication
+    ]
 
     permission_classes = [
         IsAuthenticated
@@ -221,6 +242,10 @@ class ResumeCheckerMissingSkillsAPIView(
     Endpoint to get missing skills based on ATS analysis.
     Compares resume skills with market-demanded skills and returns the gap.
     """
+
+    authentication_classes = [
+        ProjectJWTAuthentication
+    ]
 
     permission_classes = [
         IsAuthenticated
