@@ -272,19 +272,35 @@ CORS_ALLOW_CREDENTIALS = True
 
 
 
-CELERY_BROKER_URL = (
-    env(
-        "CELERY_BROKER_URL",
-        default="redis://localhost:6379/0"
-    )
-)
+# CELERY_BROKER_URL = (
+#     env(
+#         "CELERY_BROKER_URL",
+#         default="redis://localhost:6379/0"
+#     )
+# )
 
-CELERY_RESULT_BACKEND = (
-    env(
-        "CELERY_RESULT_BACKEND",
-        default="redis://localhost:6379/0"
-    )
-)
+# CELERY_RESULT_BACKEND = (
+#     env(
+#         "CELERY_RESULT_BACKEND",
+#         default="redis://localhost:6379/0"
+#     )
+# )
+
+
+
+import ssl
+
+CELERY_BROKER_URL = env("CELERY_BROKER_URL")
+
+CELERY_RESULT_BACKEND = env("CELERY_RESULT_BACKEND")
+
+CELERY_BROKER_USE_SSL = {
+    "ssl_cert_reqs": ssl.CERT_NONE,
+}
+
+CELERY_REDIS_BACKEND_USE_SSL = {
+    "ssl_cert_reqs": ssl.CERT_NONE,
+}
 
 
 
