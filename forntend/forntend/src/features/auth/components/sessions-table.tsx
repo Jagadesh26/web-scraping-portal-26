@@ -9,28 +9,18 @@ import { useToast } from "@/hooks/use-toast";
 import { formatDistanceToNow } from "date-fns";
 import { Monitor, Smartphone, ShieldCheck, LogOut, Radio, KeyRound, Globe } from "lucide-react";
 import { cn } from "@/lib/utils";
-
-interface SessionDataModel {
-  id: string;
-  device_name: string;
-  browser: string;
-  ip_address: string;
-  is_active: boolean;
-  created_at: string;
-  last_activity: string;
-  is_current?: boolean; // Set dynamically or via serializer check parameters
-}
+import type { Session } from "../types";
 
 export function SessionsTable() {
   const queryClient = useQueryClient();
   const { toast } = useToast();
 
-  const [targetSession, setTargetSession] = React.useState<SessionDataModel | null>(null);
+  const [targetSession, setTargetSession] = React.useState<Session | null>(null);
   const [isSingleOpen, setIsSingleOpen] = React.useState(false);
   const [isMasterOpen, setIsMasterOpen] = React.useState(false);
 
   // 1. Fetch data arrays from backend cache pipelines
-  const { data: rawSessions, isLoading, isError } = useQuery<SessionDataModel[]>({
+  const { data: rawSessions, isLoading, isError } = useQuery<Session[]>({
     queryKey: ["auth", "sessions"],
     queryFn: authService.getSessions,
   });
@@ -73,7 +63,7 @@ export function SessionsTable() {
     },
   });
 
-  const handleOpenSingleModal = (session: SessionDataModel) => {
+  const handleOpenSingleModal = (session: Session) => {
     setTargetSession(session);
     setIsSingleOpen(true);
   };
@@ -162,8 +152,8 @@ export function SessionsTable() {
             </tr>
           </thead>
           <tbody className="divide-y divide-border/40 text-xs font-semibold text-foreground/90">
-            {sessions.map((session: SessionDataModel) => (
-              <tr 
+            {sessions.map((session) => (
+              <tr
                 key={session.id}
                 className={cn(
                   "transition-colors hover:bg-accent/5",
@@ -220,8 +210,8 @@ export function SessionsTable() {
 
       {/* MOBILE SCALED CARDS VISUAL SYSTEM CONTAINER */}
       <div className="block md:hidden space-y-3">
-        {sessions.map((session: SessionDataModel) => (
-          <div 
+            {sessions.map((session) => (
+          <div
             key={session.id}
             className={cn(
               "p-4 bg-card border rounded-2xl space-y-3 shadow-sm relative overflow-hidden",

@@ -20,10 +20,13 @@ export interface LoginResponse {
 
 export interface Session {
   id: string;
+  device_name: string;
+  browser: string;
   ip_address: string;
-  user_agent: string;
-  last_active: string;
-  is_current_session: boolean;
+  is_active: boolean;
+  created_at: string;
+  last_activity: string;
+  is_current?: boolean;
 }
 
 export interface AuthState {
